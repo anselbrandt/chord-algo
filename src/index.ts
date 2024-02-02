@@ -3,7 +3,7 @@ import { chords, chordMap } from "./chords";
 
 const playChord = async (port: any, chord: number[]) => {
   for (const note of chord) {
-    await port.noteOn(0, note, 127);
+    await port.noteOn(0, note, 60);
   }
   await port.wait(4000);
   for (const note of chord) {
