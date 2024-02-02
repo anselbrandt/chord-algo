@@ -24,3 +24,26 @@ const chords = Array(88)
   )
   .flat()
   .filter((chord) => !chord.some((note) => note > 108));
+
+const map = new Map();
+
+for (const i in chords) {
+  const chord = chords[i];
+
+  const matches = [];
+  for (const j in chords) {
+    let noteMatches = 0;
+    const chordBeingCompared = chords[j];
+    const requiredMatches =
+      chord.length === chordBeingCompared.length
+        ? chord.length - 1
+        : Math.max(chord.length - 1, chordBeingCompared.length - 1);
+    for (const note of chordBeingCompared) {
+      if (chord.includes(note)) noteMatches++;
+    }
+    if (noteMatches === requiredMatches) matches.push(chordBeingCompared);
+  }
+  map.set(chord, matches);
+}
+
+console.log(map);
