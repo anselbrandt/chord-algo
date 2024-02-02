@@ -1,53 +1,38 @@
-const shapes = [
-  // Major
-  [0, 4, 7],
-  [0, 3, 8],
-  [0, 5, 9],
-  // Minor
-  [0, 3, 7],
-  [0, 4, 9],
-  [0, 5, 8],
-  // Major 7th
-  [0, 4, 7, 11],
-  [0, 3, 7, 8],
-  [0, 4, 5, 9],
-  [0, 1, 5, 8],
-  // Minor 7th
-  [0, 3, 7, 10],
-  [0, 4, 7, 9],
-  [0, 3, 5, 8],
-  [0, 2, 5, 9],
-];
+import JZZ from "jzz";
+import { chords, chordMap } from "./chords";
 
-// 88-key piano -> 21 - 108
-const chords = Array(88)
-  .fill(0)
-  .map((_, index) => index + 21)
-  .map((start) =>
-    shapes.map((shape) => shape.map((interval) => start + interval))
-  )
-  .flat()
-  .filter((chord) => !chord.some((note) => note > 108));
-
-const map = new Map();
-
-for (const i in chords) {
-  const chord = chords[i];
-
-  const matches = [];
-  for (const j in chords) {
-    let noteMatches = 0;
-    const chordBeingCompared = chords[j];
-    const requiredMatches =
-      chord.length === chordBeingCompared.length
-        ? chord.length - 1
-        : Math.max(chord.length - 1, chordBeingCompared.length - 1);
-    for (const note of chordBeingCompared) {
-      if (chord.includes(note)) noteMatches++;
-    }
-    if (noteMatches === requiredMatches) matches.push(chordBeingCompared);
+const playChord = async (port: any, chord: number[]) => {
+  for (const note of chord) {
+    await port.noteOn(0, note, 127);
   }
-  map.set(chord, matches);
+  await port.wait(4000);
+  for (const note of chord) {
+    await port.noteOff(0, note);
+  }
+};
+
+const getNextChord = (currentChord: number[]) => {
+  const options = chordMap.get(currentChord);
+  const chord = options[Math.floor(Math.random() * options.length)];
+  return chord;
+};
+
+async function main() {
+  const midi = await JZZ();
+  const port = await midi.openMidiOut();
+  const seed = chords[Math.floor(Math.random() * chords.length)];
+  let nextChord = null;
+  try {
+    while (true) {
+      const currentChord: number[] = nextChord || seed;
+      await playChord(port, currentChord);
+      nextChord = getNextChord(currentChord);
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    await port.close();
+  }
 }
 
-console.log(map);
+main();
