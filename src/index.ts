@@ -19,7 +19,7 @@ const getNextChord = (currentChord: number[]) => {
 
 async function main() {
   const midi = await JZZ();
-  const port = await midi.openMidiOut();
+  const port = await midi.openMidiOut("Logic Pro Virtual In");
   const seed = chords[Math.floor(Math.random() * chords.length)];
   let nextChord = null;
   try {
