@@ -20,14 +20,15 @@ const shapes = [
 ];
 
 // 88-key piano -> 21 - 108
-export const chords = Array(88)
+// 61-key range -> 36 - 96
+export const chords = Array(61)
   .fill(0)
-  .map((_, index) => index + 21)
+  .map((_, index) => index + 36)
   .map((start) =>
     shapes.map((shape) => shape.map((interval) => start + interval))
   )
   .flat()
-  .filter((chord) => !chord.some((note) => note > 108));
+  .filter((chord) => !chord.some((note) => note > 96));
 
 const chordMap = new Map();
 
