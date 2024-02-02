@@ -3,9 +3,9 @@ import { chords, chordMap } from "./chords";
 
 const playChord = async (port: any, chord: number[]) => {
   for (const note of chord) {
-    await port.noteOn(0, note, 60);
+    await port.noteOn(0, note, 90);
   }
-  await port.wait(4000);
+  await port.wait(6000);
   for (const note of chord) {
     await port.noteOff(0, note);
   }
@@ -19,7 +19,10 @@ const getNextChord = (currentChord: number[]) => {
 
 async function main() {
   const midi = await JZZ();
-  //   const ports = await midi.info().outputs;
+  const ports = await midi.info().outputs;
+  const fluidPort = ports.filter((port: any) =>
+    port.id.includes("Fluidsynth")
+  )[0];
   //   [
   //     {
   //       id: "Logic Pro Virtual In",
@@ -29,7 +32,8 @@ async function main() {
   //       engine: "node",
   //     },
   //   ]
-  const port = await midi.openMidiOut("Logic Pro Virtual In");
+  //   const port = await midi.openMidiOut("Logic Pro Virtual In");
+  const port = await midi.openMidiOut(fluidPort);
   const seed = chords[Math.floor(Math.random() * chords.length)];
   let nextChord = null;
   try {
