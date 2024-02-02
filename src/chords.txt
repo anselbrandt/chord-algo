@@ -1,0 +1,31 @@
+C Maj   -   C       E       G
+            0       4       7
+1st     -           E       G       C
+                    0       3       8
+2nd     -                   G       C       E
+                            0       5       9
+
+C m     -   C       D#/Eb   G
+            0       3       7
+1st     -           D#/Eb   G       C
+                    0       4       9
+2nd     -                   G       C       D#/Eb
+                            0       5       8
+
+C Maj 7 -   C       E       G       B
+            0       4       7       11
+1st   7 -           E       G       B       C
+                    0       3       7       8
+2nd   7 -                   G       B       C       E
+                            0       4       5       9
+3rd   7 -                           B       C       E       G
+                                    0       1       5       8
+
+C m   7 -   C       D#/Eb   G       A#/Bb
+            0       3       7       10
+1st   7 -           D#/Eb   G       A#/Bb   C
+                    0       4       7       9
+2nd   7 -                   G       A#/Bb   C       D#/Eb
+                            0       3       5       8
+3rd   7 -                           A#/Bb   C       D#/Eb   G   
+                                    0       2       5       9
