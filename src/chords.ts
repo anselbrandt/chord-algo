@@ -29,7 +29,7 @@ export const chords = Array(37)
     shapes.map((shape) => shape.map((interval) => start + interval))
   )
   .flat()
-  .filter((chord) => !chord.some((note) => note > 96));
+  .filter((chord) => !chord.some((note) => note > 84));
 
 const chordMap = new Map();
 
