@@ -6,7 +6,8 @@
   "author": "ansel brandt <ansel@anselbrandt.com>",
   "license": "MIT",
   "scripts": {
-    "start": "tsx src/index.ts"
+    "start": "tsx src/index.ts",
+    "stop": "tsx src/stop.ts"
   },
   "devDependencies": {
     "@types/node": "^20.11.15",
