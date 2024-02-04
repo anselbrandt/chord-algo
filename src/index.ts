@@ -1,13 +1,19 @@
 import JZZ from "jzz";
 import { chords, chordMap } from "./chords";
 
-const playChord = async (port: any, chord: number[]) => {
+const playChord = async (ports: any, chord: number[]) => {
+  const [port1, port2] = ports;
   for (const note of chord) {
-    await port.noteOn(0, note, 90);
+    await port1.noteOn(1, note, 90);
   }
-  await port.wait(2000);
+  await port1.wait(2000);
+  const lead = chord[Math.floor(Math.random() * chord.length)];
+  await port2.noteOn(1, lead, 120);
+  await port2.wait(1000);
+  await port2.noteOff(1, lead);
+  await port1.wait(2000);
   for (const note of chord) {
-    await port.noteOff(0, note);
+    await port1.noteOff(1, note);
   }
 };
 
@@ -21,15 +27,22 @@ const getNextChord = (currentChord: number[]): number[] => {
 async function main() {
   const midi = await JZZ();
 
-  // const ports = await midi.info().outputs;
-  // const fluidPort = ports.filter((port: any) =>
-  //   port.id.includes("FluidSynth")
-  // )[0];
-  // const logicPort = ports.filter((port: any) =>
-  //   port.id.includes("Logic Pro")
-  // )[0];
+  const ports = await midi.info().outputs;
+  const logicPort = ports.filter((port: any) =>
+    port.id.includes("Logic Pro")
+  )[0];
 
-  const port = await midi.openMidiOut();
+  const IACport1 = ports.filter((port: any) =>
+    port.id.includes("IAC Driver Bus 1")
+  )[0];
+
+  const IACport2 = ports.filter((port: any) =>
+    port.id.includes("IAC Driver Bus 2")
+  )[0];
+
+  const port1 = await midi.openMidiOut(IACport1);
+  const port2 = await midi.openMidiOut(IACport2);
+
   const seed = chords[Math.floor(Math.random() * chords.length)];
   let nextChord = null;
   let prevChords: number[][] = [];
@@ -46,7 +59,7 @@ async function main() {
     while (true) {
       const currentChord: number[] = nextChord || seed;
       if (!prevChords.includes(currentChord)) {
-        await playChord(port, currentChord);
+        await playChord([port1, port2], currentChord);
         addToPrevChords(currentChord);
       }
       nextChord = getNextChord(currentChord);
@@ -54,7 +67,8 @@ async function main() {
   } catch (error) {
     console.log(error);
   } finally {
-    await port.close();
+    await port1.close();
+    await port2.close();
   }
 }
 
