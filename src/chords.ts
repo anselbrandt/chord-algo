@@ -1,12 +1,12 @@
 const shapes = [
   // Major
-  // [0, 4, 7],
-  // [0, 3, 8],
-  // [0, 5, 9],
+  [0, 4, 7],
+  [0, 3, 8],
+  [0, 5, 9],
   // Minor
-  // [0, 3, 7],
-  // [0, 4, 9],
-  // [0, 5, 8],
+  [0, 3, 7],
+  [0, 4, 9],
+  [0, 5, 8],
   // Major 7th
   [0, 4, 7, 11],
   [0, 3, 7, 8],
@@ -21,9 +21,10 @@ const shapes = [
 
 // 88-key piano -> 21 - 108
 // 61-key range -> 36 - 96
-export const chords = Array(61)
+// 37-key range -> 48 - 84
+export const chords = Array(37)
   .fill(0)
-  .map((_, index) => index + 36)
+  .map((_, index) => index + 48)
   .map((start) =>
     shapes.map((shape) => shape.map((interval) => start + interval))
   )

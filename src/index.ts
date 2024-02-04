@@ -32,10 +32,23 @@ async function main() {
   const port = await midi.openMidiOut();
   const seed = chords[Math.floor(Math.random() * chords.length)];
   let nextChord = null;
+  let prevChords: number[][] = [];
+  const addToPrevChords = (chord: number[]) => {
+    if (prevChords.length === 4) {
+      let first, rest;
+      [first, ...rest] = prevChords;
+      prevChords = [...rest, chord];
+    } else {
+      prevChords.push(chord);
+    }
+  };
   try {
     while (true) {
       const currentChord: number[] = nextChord || seed;
-      await playChord(port, currentChord);
+      if (!prevChords.includes(currentChord)) {
+        await playChord(port, currentChord);
+        addToPrevChords(currentChord);
+      }
       nextChord = getNextChord(currentChord);
     }
   } catch (error) {
