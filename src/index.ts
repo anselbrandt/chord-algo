@@ -1,5 +1,6 @@
 import JZZ from "jzz";
 import { chords, chordMap } from "./chords";
+import fs from "fs/promises";
 
 const playChord = async (ports: any, chord: number[]) => {
   const [port1, port2] = ports;
@@ -8,7 +9,7 @@ const playChord = async (ports: any, chord: number[]) => {
   }
   const lead = chord[Math.floor(Math.random() * chord.length)];
   await port2.wait(1000);
-  await port2.noteOn(1, lead, 120);
+  await port2.noteOn(1, lead, 90);
   await port2.wait(1000);
   await port2.noteOff(1, lead);
 
@@ -26,12 +27,14 @@ const getNextChord = (currentChord: number[]): number[] => {
 };
 
 async function main() {
+  const arr = Array.from(chordMap);
+  const chordArr = arr.map((entry) => entry[0]);
+
+  console.log(chordMap.size);
+
   const midi = await JZZ();
 
   const ports = await midi.info().outputs;
-  const logicPort = ports.filter((port: any) =>
-    port.id.includes("Logic Pro")
-  )[0];
 
   const IACport1 = ports.filter((port: any) =>
     port.id.includes("IAC Driver Bus 1")
@@ -60,6 +63,8 @@ async function main() {
     while (true) {
       const currentChord: number[] = nextChord || seed;
       if (!prevChords.includes(currentChord)) {
+        const idx = chordArr.indexOf(currentChord);
+        console.log(idx);
         await playChord([port1, port2], currentChord);
         addToPrevChords(currentChord);
       }
