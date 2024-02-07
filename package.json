@@ -6,6 +6,7 @@
   "author": "ansel brandt <ansel@anselbrandt.com>",
   "license": "MIT",
   "scripts": {
+    "ports": "tsx src/ports.ts",
     "start": "npm stop && tsx src/index.ts",
     "stop": "tsx src/stop.ts"
   },
