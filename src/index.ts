@@ -52,6 +52,8 @@ async function main() {
 
   const outPorts = await midi.info().outputs;
 
+  console.log(outPorts.map((port: any) => port.name));
+
   const [portDesc1, portDesc2, portDesc3] = PORT_NAMES.map(
     (portName) => outPorts.filter((port: any) => port.id.includes(portName))[0]
   );
