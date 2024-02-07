@@ -1,25 +1,18 @@
 import JZZ from "jzz";
+import { PORT_NAMES } from "./constants";
 
 async function main() {
   const midi = await JZZ();
 
-  const ports = await midi.info().outputs;
+  const outPorts = await midi.info().outputs;
 
-  const IACport1 = ports.filter((port: any) =>
-    port.id.includes("IAC Driver Bus 1")
-  )[0];
+  const [portDesc1, portDesc2, portDesc3] = PORT_NAMES.map(
+    (portName) => outPorts.filter((port: any) => port.id.includes(portName))[0]
+  );
 
-  const IACport2 = ports.filter((port: any) =>
-    port.id.includes("IAC Driver Bus 2")
-  )[0];
-
-  const IACport3 = ports.filter((port: any) =>
-    port.id.includes("IAC Driver Bus 3")
-  )[0];
-
-  const port1 = await midi.openMidiOut(IACport1);
-  const port2 = await midi.openMidiOut(IACport2);
-  const port3 = await midi.openMidiOut(IACport3);
+  const port1 = await midi.openMidiOut(portDesc1);
+  const port2 = await midi.openMidiOut(portDesc2);
+  const port3 = await midi.openMidiOut(portDesc3);
 
   try {
     await port1.allNotesOff(1);
